@@ -29,7 +29,7 @@ include FNS_DIR . "fns_tree.php";
 
 
 <?php
-// Получаем путь
+// Получаем путь.
 $path = $_GET['path'] ?? DOCUMENT_ROOT;
 // Печатаем каталог.
 printTree($path);
