@@ -25,7 +25,7 @@ include FNS_DIR . "fns_tree.php";
     </style>
 </head>
 <body>
-<h1>Дерево каталога сайта: <?= $_SERVER['HTTP_HOST'] ?></h1>
+<h1>Проводник</h1>
 
 
 <?php
