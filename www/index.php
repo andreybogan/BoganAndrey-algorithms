@@ -26,11 +26,13 @@ include FNS_DIR . "fns_tree.php";
 </head>
 <body>
 <h1>Дерево каталога сайта: <?= $_SERVER['HTTP_HOST'] ?></h1>
-<p>Путь к каталогу: <?= DOCUMENT_ROOT ?></p>
+
 
 <?php
+// Получаем путь
+$path = $_GET['path'] ?? DOCUMENT_ROOT;
 // Печатаем каталог.
-printTree(DOCUMENT_ROOT);
+printTree($path);
 ?>
 
 </body>

@@ -14,10 +14,12 @@ function printTree($path)
         if ($file->isDir()) {
             // Если имя не равно: .git и .idea
             if (!$file->isDot() && $fileName != '.git' && $fileName != '.idea') {
-                echo "<li><span style='font-weight: bold; text-decoration: underline;'> " . $fileName . "</span>";
-                printTree($path . "/" . $fileName);
+                echo "<li><a href='/?path=" . $file->getPathname() . "' style='font-weight: bold; text-decoration: underline;'> " . $fileName . "</a>";
+//                printTree($path . "/" . $fileName);
                 echo "</li>";
                 continue;
+            } elseif ($file->isDot()){
+                echo "<li><a href='/?path=" . $file->getPathname() . "' style='font-weight: bold; text-decoration: underline;'> " . $fileName . "</a></li>";
             }
         } else {
             // Если элемент не является каталогом, просто выводим его.
