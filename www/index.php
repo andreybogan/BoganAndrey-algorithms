@@ -1,4 +1,5 @@
 <?php
+
 function quickSort($arr)
 {
     static $step = 0;
@@ -37,7 +38,7 @@ function quickSort($arr)
     $result = array_merge($left_arr, array($first_val), $right_arr);
 
     // Вычисление сложности алгоритма для каждого вызова функции.
-    // В последнем вызове покажется общая сложность алгоритма.
+    // В последнем вызове покажется общее количество шагов и сложность алгоритма.
     if ($step > $simple) {
         echo "Количесвто шагов: " . ($step + $simple) . "<br>";
         echo "Сложность элемента: О({$step})<br>";
