@@ -1,53 +1,52 @@
 <?php
+$connect = mysqli_connect("localhost", "root", "", "algoritm-3");
+$result = mysqli_query($connect,
+    "SELECT DISTINCT id_category id, category_name name, parent_id, child_id, level from categories c inner join category_links cl on c.id_category = cl.child_id");
 
-function quickSort($arr)
-{
-    static $step = 0;
-    static $simple = 0;
-
-    $count = count($arr);
-    if ($count <= 1) {
-        $simple++;
-        return $arr;
-
-    }
-
-    $simple++;
-    $first_val = $arr[0];
-    $simple++;
-    $left_arr = [];
-    $simple++;
-    $right_arr = [];
-
-    for ($i = 1; $i < $count; $i++) {
-        $step++;
-        if ($arr[$i] <= $first_val) {
-            $left_arr[] = $arr[$i];
-        } else {
-            $right_arr[] = $arr[$i];
+if (mysqli_num_rows($result) > 0) {
+    $cats = [];
+    while ($cat = mysqli_fetch_assoc($result)) {
+        if (($cat['parent_id'] != $cat['child_id'] || $cat['level'] == 0) && $cat['parent_id'] >= $cat['level']) {
+            $cats[$cat['level']][] = [
+                'id' => $cat['id'],
+                'name' => $cat['name'],
+                'parent_id' => $cat['parent_id'],
+                'child_id' => $cat['child_id'],
+//                'level' => $cat['level'],
+            ];
         }
     }
-
-    $simple++;
-    $left_arr = quickSort($left_arr);
-
-    $simple++;
-    $right_arr = quickSort($right_arr);
-
-    $simple++;
-    $result = array_merge($left_arr, array($first_val), $right_arr);
-
-    // Вычисление сложности алгоритма для каждого вызова функции.
-    // В последнем вызове покажется общее количество шагов и сложность алгоритма.
-    if ($step > $simple) {
-        echo "Количесвто шагов: " . ($step + $simple) . "<br>";
-        echo "Сложность элемента: О({$step})<br>";
-    } else {
-        echo "Количесвто шагов: " . ($step + $simple) . "<br>";
-        echo "Сложность элемента: О(" . ($step + $simple) . ")<br>";
-    }
-
-    return $result;
+    var_dump($cats);
 }
 
-var_dump(quickSort([2, 3, 1, 7, 4, 0, 6, 5, 8, 9, 10, 11, 12]));
+/* Функция строит наше иерархическое дерево любой вложенности.
+   В качестве параметров функции передаем массив разделов и id раздела
+   В цикле перебираем подкатегории и если в них есть разделы то запускаем функцию
+   еще раз с параметрами (новый массив разделов, id раздела, который нужно построить)
+*/
+function build_tree($cats, $parent_id, $only_parent = false)
+{var_dump($only_parent);
+    if (is_array($cats) and isset($cats[$parent_id])) {
+        $tree = "<ul>";
+        if ($only_parent == false) {
+            foreach ($cats[$parent_id] as $cat) {
+                var_dump($cat);
+                $tree .= "<li>" . $cat['name'];
+                $tree .= build_tree($cats, $cat['id']);
+                $tree .= "</li>";
+            }
+
+        } elseif (is_numeric($only_parent)) {
+            $cat = $cats[$parent_id][$only_parent];
+            $tree .= "<li>" . $cat['name'];
+            $tree .= build_tree($cats, $cat['id']);
+            $tree .= "</li>";
+        }
+        $tree .= "</ul>";
+    } else {
+        return null;
+    }
+    return $tree;
+}
+
+echo build_tree($cats, 0);
